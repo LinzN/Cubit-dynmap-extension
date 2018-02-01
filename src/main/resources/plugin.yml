@@ -1,0 +1,7 @@
+name: Cubit-dynmap-extention
+main : de.linzn.cubitDynmap.plugin.CubitDynmapPlugin
+version: ${project.version}
+description: An addon for Cubit to display regions on dynmap
+author: Niklas Linz
+load: POSTWORLD
+depend: [Cubit, dynmap]
