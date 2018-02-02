@@ -14,11 +14,10 @@ package de.linzn.cubitDynmap.plugin.dynmap;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
-import de.linzn.cubit.internal.regionMgr.LandTypes;
-import de.linzn.cubit.internal.regionMgr.region.RegionData;
+import de.linzn.cubit.internal.cubitRegion.CubitType;
+import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
-import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerSet;
 
 import static org.bukkit.Bukkit.getServer;
@@ -37,11 +36,11 @@ public class DynmapCubitAPI {
         }
     }
 
-    public void addNewStyle(final RegionData regionData) {
+    public void addNewStyle(CubitLand regionData) {
         double[] x;
         double[] z;
         AreaMarker areaMarker;
-        ProtectedRegion wgRegion = regionData.praseWGRegion();
+        ProtectedRegion wgRegion = regionData.getWGRegion();
         RegionType tn = wgRegion.getType();
         BlockVector l0 = wgRegion.getMinimumPoint();
         BlockVector l1 = wgRegion.getMaximumPoint();
@@ -61,10 +60,10 @@ public class DynmapCubitAPI {
         x[3] = l1.getX() + 1.0;
         z[3] = l0.getZ();
 
-        String descriptionString = "";
+        String descriptionString = "Test";
 
-        areaMarker = cubitMarkers.createAreaMarker(regionData.getRegionName(), descriptionString, false, regionData.getWorld().getName(), x, z, true);
-        int colorCode = getColorCode(regionData.getLandType());
+        areaMarker = cubitMarkers.createAreaMarker(regionData.getLandName(), descriptionString, false, regionData.getWorld().getName(), x, z, true);
+        int colorCode = getColorCode(regionData.getCubitType());
         if (areaMarker != null) {
             areaMarker.setFillStyle(0.4, colorCode);
             areaMarker.setLineStyle(0, 0, 0);
@@ -78,7 +77,11 @@ public class DynmapCubitAPI {
         }
     }
 
-    private int getColorCode(LandTypes landTypes) {
+    public void clearData(){
+        this.cubitMarkers.deleteMarkerSet();
+    }
+
+    private int getColorCode(CubitType landTypes) {
         int colorCode;
         switch (landTypes) {
             case SHOP:
