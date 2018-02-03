@@ -14,7 +14,6 @@ package de.linzn.cubitDynmap.plugin.dynmap;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
-import de.linzn.cubit.internal.cubitRegion.CubitType;
 import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
@@ -36,11 +35,11 @@ public class DynmapCubitAPI {
         }
     }
 
-    public void addNewStyle(CubitLand regionData) {
+    public void addNewStyle(CubitLand cubitLand) {
         double[] x;
         double[] z;
         AreaMarker areaMarker;
-        ProtectedRegion wgRegion = regionData.getWGRegion();
+        ProtectedRegion wgRegion = cubitLand.getWGRegion();
         RegionType tn = wgRegion.getType();
         BlockVector l0 = wgRegion.getMinimumPoint();
         BlockVector l1 = wgRegion.getMaximumPoint();
@@ -60,11 +59,12 @@ public class DynmapCubitAPI {
         x[3] = l1.getX() + 1.0;
         z[3] = l0.getZ();
 
-        String descriptionString = "Test";
+        String descriptionString = this.getDescription(cubitLand);
 
-        areaMarker = cubitMarkers.createAreaMarker(regionData.getLandName(), descriptionString, false, regionData.getWorld().getName(), x, z, true);
-        int colorCode = getColorCode(regionData.getCubitType());
+        areaMarker = cubitMarkers.createAreaMarker(cubitLand.getLandName(), cubitLand.getLandName(), false, cubitLand.getWorld().getName(), x, z, true);
+        int colorCode = getColorCode(cubitLand);
         if (areaMarker != null) {
+            areaMarker.setDescription(descriptionString);
             areaMarker.setFillStyle(0.4, colorCode);
             areaMarker.setLineStyle(0, 0, 0);
         }
@@ -72,20 +72,56 @@ public class DynmapCubitAPI {
 
     public void removeExistStyle(final String regionID) {
         AreaMarker cubitMarker = this.cubitMarkers.findAreaMarker(regionID);
-        if (cubitMarker != null){
+        if (cubitMarker != null) {
             cubitMarker.deleteMarker();
         }
     }
 
-    public void clearData(){
+    public void clearData() {
         this.cubitMarkers.deleteMarkerSet();
     }
 
-    private int getColorCode(CubitType landTypes) {
-        int colorCode;
-        switch (landTypes) {
+    private String getDescription(CubitLand cubitLand) {
+        String cubitStringType = "<div class=\"cubitInfo\">" + "{typeString}" + "</div>";
+        /* Set type */
+        switch (cubitLand.getCubitType()) {
+            case SERVER:
+                cubitStringType = cubitStringType.replace("{typeString}", "<div class=\"infowindow\"><span style=\"font-size:120%;\"><center><b>Cubit Info</b></center> <br>{type} <br>{cubitLand}</span></div>");
+                break;
             case SHOP:
-                colorCode = Integer.parseInt("275db0", 16);
+                cubitStringType = cubitStringType.replace("{typeString}", "<div class=\"infowindow\"><span style=\"font-size:120%;\"><center><b>Cubit Info</b></center> <br>{type} <br>{cubitLand} <br>{owner}</span></div>");
+                if (cubitLand.getOwnersUUID().length == 0) {
+                    cubitStringType = cubitStringType.replace("{owner}", "Zum Verkauf");
+                } else {
+                    cubitStringType = cubitStringType.replace("{owner}", "<b>Inhaber: </b>" + cubitLand.getOwnerNames()[0]);
+                }
+                break;
+            case WORLD:
+                cubitStringType = cubitStringType.replace("{typeString}", "<div class=\"infowindow\"><span style=\"font-size:120%;\"><center><b>Cubit Info</b></center> <br>{type} <br>{cubitLand} <br>{owner}</span></div>");
+                if (cubitLand.getOwnersUUID().length == 0) {
+                    cubitStringType = cubitStringType.replace("{owner}", "Unbewohnt");
+                } else {
+                    cubitStringType = cubitStringType.replace("{owner}", "<b>Besitzer: </b>" + cubitLand.getOwnerNames()[0]);
+                }
+                break;
+            default:
+                cubitStringType = cubitStringType.replace("{typeString}", "<div class=\"infowindow\"><span style=\"font-size:120%;\"><center><b>Cubit Info</b></center> <br>{type} <br>{cubitLand}</span></div>");
+                break;
+        }
+        cubitStringType = cubitStringType.replace("{cubitLand}", "<b>Id: </b>" + cubitLand.getLandName());
+        cubitStringType = cubitStringType.replace("{type}", "<b>Typ: </b>" + cubitLand.getCubitType().name());
+        return cubitStringType;
+    }
+
+    private int getColorCode(CubitLand cubitLand) {
+        int colorCode;
+        switch (cubitLand.getCubitType()) {
+            case SHOP:
+                if (cubitLand.getOwnersUUID().length > 0) {
+                    colorCode = Integer.parseInt("275db0", 16);
+                } else {
+                    colorCode = Integer.parseInt("0db914", 16);
+                }
                 break;
             case SERVER:
                 colorCode = Integer.parseInt("9c27b0", 16);

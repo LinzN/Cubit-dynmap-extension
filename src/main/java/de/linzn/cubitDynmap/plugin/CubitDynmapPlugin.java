@@ -14,6 +14,7 @@ package de.linzn.cubitDynmap.plugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import de.linzn.cubit.api.CubitAPI;
 import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
 import de.linzn.cubitDynmap.plugin.dynmap.DynmapCubitAPI;
 import org.bukkit.Bukkit;
@@ -21,7 +22,6 @@ import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -69,19 +69,27 @@ public class CubitDynmapPlugin extends JavaPlugin {
         return true;
     }
 
-    private void loadRegionsToDynmap(){
+    private void loadRegionsToDynmap() {
         this.getLogger().info("Loading all cubitLands to dynmap...");
-        for (World world : Bukkit.getWorlds()){
+        for (World world : Bukkit.getWorlds()) {
             ArrayList<CubitLand> worldLands = new ArrayList<>();
             Collection<ProtectedRegion> regions = WorldGuardPlugin.inst().getRegionManager(world).getRegions().values();
-            for (ProtectedRegion region : regions){
-                CubitLand land = new CubitLand(world);
-                land.setWGRegion(region);
-                worldLands.add(land);
+            for (ProtectedRegion region : regions) {
+                if (region.getId().split("_").length == 3) {
+                    try {
+                        int chunkX = Integer.parseInt(region.getId().split("_")[1]);
+                        int chunkY = Integer.parseInt(region.getId().split("_")[2]);
+                        CubitLand land = CubitAPI.getCubitLand(world, chunkX, chunkY);
+                        worldLands.add(land);
+                    } catch (NumberFormatException ignored) {
+                        /* If __global__ ore somthing else*/
+                        this.getLogger().info("Not a cubit land. Ignoring " + region.getId());
+                    }
+                }
             }
 
             Bukkit.getScheduler().runTask(CubitDynmapPlugin.inst(), () -> {
-                for (CubitLand land : worldLands){
+                for (CubitLand land : worldLands) {
                     this.dynmapCubitAPI.addNewStyle(land);
                 }
                 this.getLogger().info("Finish for world " + world.getName());
