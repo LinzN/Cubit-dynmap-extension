@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class CubitEventListener implements Listener {
+
     @EventHandler
     public void onCubitLandBuyEvent(final CubitLandBuyEvent cubitLandBuyEvent) {
         Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.addNewStyle(cubitLandBuyEvent.getCubitLand()), 40L);
