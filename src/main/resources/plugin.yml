@@ -5,3 +5,4 @@ description: An addon for Cubit to display regions on dynmap
 author: Niklas Linz
 load: POSTWORLD
 depend: [Cubit, dynmap, WorldGuard, WorldEdit]
+api-version: 1.13
