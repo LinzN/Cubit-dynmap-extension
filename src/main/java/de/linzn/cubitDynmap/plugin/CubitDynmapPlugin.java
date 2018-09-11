@@ -12,7 +12,9 @@
 package de.linzn.cubitDynmap.plugin;
 
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldguard.WorldGuard;
+
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.linzn.cubit.api.CubitAPI;
 import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
@@ -21,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +76,8 @@ public class CubitDynmapPlugin extends JavaPlugin {
         this.getLogger().info("Loading all cubitLands to dynmap...");
         for (World world : Bukkit.getWorlds()) {
             ArrayList<CubitLand> worldLands = new ArrayList<>();
-            Collection<ProtectedRegion> regions = WorldGuardPlugin.inst().getRegionManager(world).getRegions().values();
+
+            Collection<ProtectedRegion> regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(new BukkitWorld(world)).getRegions().values();
             for (ProtectedRegion region : regions) {
                 if (region.getId().split("_").length == 3) {
                     try {
