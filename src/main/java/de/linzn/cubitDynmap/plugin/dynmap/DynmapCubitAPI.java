@@ -11,7 +11,8 @@
 
 package de.linzn.cubitDynmap.plugin.dynmap;
 
-import com.sk89q.worldedit.BlockVector;
+
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
 import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
@@ -41,8 +42,8 @@ public class DynmapCubitAPI {
         AreaMarker areaMarker;
         ProtectedRegion wgRegion = cubitLand.getWGRegion();
         RegionType tn = wgRegion.getType();
-        BlockVector l0 = wgRegion.getMinimumPoint();
-        BlockVector l1 = wgRegion.getMaximumPoint();
+        BlockVector3 l0 = wgRegion.getMinimumPoint();
+        BlockVector3 l1 = wgRegion.getMaximumPoint();
 
         if (tn != RegionType.CUBOID) {
             /* No valid region. But this should never happen */
