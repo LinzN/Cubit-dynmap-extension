@@ -29,11 +29,12 @@ public class DynmapCubitAPI {
 
     public DynmapCubitAPI() {
         this.dynmapAPI = (DynmapAPI) getServer().getPluginManager().getPlugin("dynmap");
-        this.cubitMarkers = this.dynmapAPI.getMarkerAPI().createMarkerSet("Cubit", "Cubit", null, true);
+        this.cubitMarkers = this.dynmapAPI.getMarkerAPI().createMarkerSet("cubit.markerset", "Cubit", null, true);
         /* If already exist */
         if (this.cubitMarkers == null) {
-            this.cubitMarkers = this.dynmapAPI.getMarkerAPI().getMarkerSet("Cubit");
+            this.cubitMarkers = this.dynmapAPI.getMarkerAPI().getMarkerSet("cubit.markerset");
         }
+        this.clearData();
     }
 
     public void addNewStyle(CubitLand cubitLand) {
@@ -132,5 +133,10 @@ public class DynmapCubitAPI {
                 break;
         }
         return colorCode;
+    }
+
+    public void updateStyle(CubitLand cubitLand){
+        removeExistStyle(cubitLand.getLandName());
+        addNewStyle(cubitLand);
     }
 }

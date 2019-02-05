@@ -33,7 +33,6 @@ public class CubitEventListener implements Listener {
 
     @EventHandler
     public void onCubitLandUpdateEvent(final CubitLandUpdateEvent cubitLandUpdateEvent) {
-            Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.removeExistStyle(cubitLandUpdateEvent.getRegionID()), 20L);
-            Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.addNewStyle(cubitLandUpdateEvent.getRegionData()), 40L);
+        Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.updateStyle(cubitLandUpdateEvent.getRegionData()), 20);
     }
 }
