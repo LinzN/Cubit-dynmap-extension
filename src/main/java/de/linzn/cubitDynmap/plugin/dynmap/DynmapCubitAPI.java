@@ -36,10 +36,10 @@ public class DynmapCubitAPI {
         }
     }
 
-    public void addNewStyle(CubitLand cubitLand) {
+    public void setNewStyle(CubitLand cubitLand) {
         double[] x;
         double[] z;
-        AreaMarker areaMarker;
+        AreaMarker areaMarker = cubitMarkers.findAreaMarker(cubitLand.getLandName());
         ProtectedRegion wgRegion = cubitLand.getWGRegion();
         RegionType tn = wgRegion.getType();
         BlockVector3 l0 = wgRegion.getMinimumPoint();
@@ -61,8 +61,10 @@ public class DynmapCubitAPI {
         z[3] = l0.getZ();
 
         String descriptionString = this.getDescription(cubitLand);
+        if (areaMarker == null) {
+            areaMarker = cubitMarkers.createAreaMarker(cubitLand.getLandName(), cubitLand.getLandName(), false, cubitLand.getWorld().getName(), x, z, true);
+        }
 
-        areaMarker = cubitMarkers.createAreaMarker(cubitLand.getLandName(), cubitLand.getLandName(), false, cubitLand.getWorld().getName(), x, z, true);
         int colorCode = getColorCode(cubitLand);
         if (areaMarker != null) {
             areaMarker.setDescription(descriptionString);
@@ -135,10 +137,5 @@ public class DynmapCubitAPI {
                 break;
         }
         return colorCode;
-    }
-
-    public void updateStyle(CubitLand cubitLand){
-        removeExistStyle(cubitLand.getLandName());
-        addNewStyle(cubitLand);
     }
 }

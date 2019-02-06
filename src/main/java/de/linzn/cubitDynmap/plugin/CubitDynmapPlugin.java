@@ -94,7 +94,7 @@ public class CubitDynmapPlugin extends JavaPlugin {
 
             Bukkit.getScheduler().runTask(CubitDynmapPlugin.inst(), () -> {
                 for (CubitLand land : worldLands) {
-                    this.dynmapCubitAPI.addNewStyle(land);
+                    this.dynmapCubitAPI.setNewStyle(land);
                 }
                 this.getLogger().info("Finish for world " + world.getName());
             });

@@ -15,6 +15,7 @@ package de.linzn.cubitDynmap.plugin;
 import de.linzn.cubit.api.events.CubitLandBuyEvent;
 import de.linzn.cubit.api.events.CubitLandSellEvent;
 import de.linzn.cubit.api.events.CubitLandUpdateEvent;
+import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,7 @@ public class CubitEventListener implements Listener {
 
     @EventHandler
     public void onCubitLandBuyEvent(final CubitLandBuyEvent cubitLandBuyEvent) {
-        Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.addNewStyle(cubitLandBuyEvent.getCubitLand()), 40L);
+        Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.setNewStyle(cubitLandBuyEvent.getCubitLand()), 40L);
     }
 
     @EventHandler
@@ -33,6 +34,11 @@ public class CubitEventListener implements Listener {
 
     @EventHandler
     public void onCubitLandUpdateEvent(final CubitLandUpdateEvent cubitLandUpdateEvent) {
-        Bukkit.getScheduler().runTaskLater(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.updateStyle(cubitLandUpdateEvent.getRegionData()), 20);
+        CubitLand cubitLand = cubitLandUpdateEvent.getRegionData();
+        //todo only tempfix
+        Bukkit.getScheduler().runTaskLaterAsynchronously(CubitDynmapPlugin.inst(), () -> {
+            cubitLand.setWGRegion(cubitLand.getWGRegion(), true);
+            Bukkit.getScheduler().runTask(CubitDynmapPlugin.inst(), () -> CubitDynmapPlugin.inst().dynmapCubitAPI.setNewStyle(cubitLand));
+        }, 20);
     }
 }
