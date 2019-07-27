@@ -93,7 +93,6 @@
                     <groupId>org.bukkit</groupId>
                 </exclusion>
             </exclusions>
-
         </dependency>
     </dependencies>
     <build>
