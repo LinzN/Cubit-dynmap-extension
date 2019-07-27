@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2018. MineGaming - All Rights Reserved
- * You may use, distribute and modify this code under the
- * terms of the LGPLv3 license, which unfortunately won't be
- * written for another century.
+ *  Copyright (C) 2019. MineGaming - All Rights Reserved
+ *  You may use, distribute and modify this code under the
+ *  terms of the LGPLv3 license, which unfortunately won't be
+ *  written for another century.
  *
  *  You should have received a copy of the LGPLv3 license with
  *  this file. If not, please write to: niklas.linz@enigmar.de
@@ -14,7 +14,6 @@ package de.linzn.cubitDynmap.plugin;
 
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldguard.WorldGuard;
-
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.linzn.cubit.api.CubitAPI;
 import de.linzn.cubit.internal.cubitRegion.region.CubitLand;
@@ -23,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
